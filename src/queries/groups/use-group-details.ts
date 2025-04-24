@@ -1,4 +1,4 @@
-import { getGroupDetails } from "@/src/http/transactions/get-group-details";
+import { getGroupDetails } from "@/src/http/groups/get-group-details";
 import { useQuery } from "@tanstack/react-query";
 import { groupKeys } from "./group-query-keys";
 

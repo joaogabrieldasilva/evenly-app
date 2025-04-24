@@ -1,4 +1,5 @@
 import { api, ApiResponse } from "../api";
+import { publicApi } from "../public-api";
 
 type Params = {
   email: string;
@@ -14,7 +15,7 @@ type Response = ApiResponse<{
 }>;
 
 export async function signIn({ email, password }: Params) {
-  const response = await api.post<Response>("/auth/sign-in", {
+  const response = await publicApi.post<Response>("/auth/sign-in", {
     email,
     password,
   });

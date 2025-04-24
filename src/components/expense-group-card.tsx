@@ -1,18 +1,12 @@
 import { Image, Text, View } from "react-native";
 import { formatCurrency } from "../utils/format-currency";
 
-type Member = {
-  id: number;
-  name: string;
-  avatar: string;
-};
-
 type ExpenseGroup = {
   id: number;
   name: string;
   description: string;
   totalExpenses: number;
-  members: Member[];
+  members: string[];
 };
 
 type ExpenseGroupCardProps = {} & ExpenseGroup;
@@ -41,7 +35,7 @@ export function ExpenseGroupCard({
         {members?.map((member, index) => (
           <View
             key={index}
-            className="size-10 bg-gray-100 rounded-full border-2 border-white"
+            className="bg-gray-100 rounded-full border-2 border-white"
             style={{
               transform: [
                 {
@@ -51,13 +45,12 @@ export function ExpenseGroupCard({
             }}
           >
             <Image
-              className="flex-1"
+              className="size-12"
               borderRadius={100}
               source={{
-                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNbkECXtEG_6-RV7CSNgNoYUGZE-JCliYm9g&s",
+                uri: member,
               }}
             />
-            <View className="border-2 border-white"></View>
           </View>
         ))}
       </View>

@@ -1,3 +1,4 @@
+import { cn } from "@/src/utils/cn";
 import {
   Text,
   TextProps,
@@ -7,7 +8,7 @@ import {
 
 const variants = {
   solid: {
-    background: "bg-green-500 p-4 rounded-xl w-full",
+    background: "bg-green-600 p-4 rounded-xl w-full",
     text: "text-white text-center font-bold text-lg",
   },
   outline: {
@@ -26,13 +27,20 @@ export function Button({
   variant = "solid",
   text,
   textProps,
+  className,
   ...props
 }: ButtonProps) {
   const variantStyles = variants[variant];
 
   return (
-    <TouchableOpacity className={variantStyles.background} {...props}>
-      <Text {...textProps} className={variantStyles.text}>
+    <TouchableOpacity
+      className={cn(variantStyles.background, className)}
+      {...props}
+    >
+      <Text
+        {...textProps}
+        className={cn(variantStyles.text, textProps?.className)}
+      >
         {text}
       </Text>
     </TouchableOpacity>

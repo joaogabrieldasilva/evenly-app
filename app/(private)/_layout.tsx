@@ -5,9 +5,11 @@ export default function PrivateLayout() {
     <Stack>
       <Stack.Screen
         name="(tabs)"
-        options={{ headerShown: false, title: "Your groups" }}
+        options={{
+          headerShown: false,
+          title: "Your groups",
+        }}
       />
-      <Stack.Screen name="group" />
     </Stack>
   );
 }

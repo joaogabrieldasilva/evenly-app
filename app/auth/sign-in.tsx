@@ -60,7 +60,7 @@ export default function SignIn() {
           <TextInput name="password" placeholder="Password" />
         </View>
       </FormProvider>
-      <Button text="Login" onPress={handleSubmit(onSubmit)} />
+      <Button text="Login" className="mt-4" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }

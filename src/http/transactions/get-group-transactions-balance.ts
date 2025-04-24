@@ -8,6 +8,7 @@ type Response = ApiResponse<
   {
     id: number;
     name: string;
+    profileImage: string;
     hasToPay: number;
     hasToReceive: number;
   }[]

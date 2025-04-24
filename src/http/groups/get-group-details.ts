@@ -5,14 +5,11 @@ type Params = {
 };
 
 type Response = ApiResponse<{
-  groups: {
-    id: number;
-    name: string;
-    description: string;
-    members: string[];
-    totalExpenses: number;
-  }[];
-  nextCursor: number | null;
+  id: number;
+  name: string;
+  description: string;
+  members: string[];
+  totalExpenses: number;
 }>;
 
 export async function getGroupDetails({ groupId }: Params) {

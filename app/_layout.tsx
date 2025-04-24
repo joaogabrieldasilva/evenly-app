@@ -1,18 +1,19 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import "../src/global.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuth } from "@/src/store/auth-store";
 
 export { ErrorBoundary } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -36,10 +37,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="auth" />
-        <Stack.Screen name="(private)" />
-      </Stack>
+      <Stack screenOptions={{ headerShown: false, animation: "none" }} />
     </QueryClientProvider>
   );
 }
