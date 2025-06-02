@@ -9,6 +9,8 @@ type Response = ApiResponse<
     author: string;
     authorProfileImage: string;
     amount: number;
+    description: string;
+    category: string;
     transactionId: number;
     borrowers: string[];
   }[]

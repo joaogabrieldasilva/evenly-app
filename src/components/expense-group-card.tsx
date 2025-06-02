@@ -1,5 +1,8 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, View, ViewProps } from "react-native";
 import { formatCurrency } from "../utils/format-currency";
+import { cn } from "../utils/cn";
+import { Button } from "./ui/button";
+import { router } from "expo-router";
 
 type ExpenseGroup = {
   id: number;
@@ -9,16 +12,25 @@ type ExpenseGroup = {
   members: string[];
 };
 
-type ExpenseGroupCardProps = {} & ExpenseGroup;
+type ExpenseGroupCardProps = {} & ExpenseGroup & Omit<ViewProps, "id">;
 
 export function ExpenseGroupCard({
+  id,
   name,
   description,
   members,
   totalExpenses,
+  className,
+  ...props
 }: ExpenseGroupCardProps) {
   return (
-    <View className="bg-white rounded-md p-4">
+    <View
+      className={cn(
+        "rounded-xl border border-gray-300 p-4 shadow-sm  shadow-slate-100 bg-white",
+        className
+      )}
+      {...props}
+    >
       <View className="flex-row justify-between ">
         <View>
           <Text className="font-semibold text-lg">{name}</Text>
@@ -31,8 +43,9 @@ export function ExpenseGroupCard({
           <Text className="text-xs text-gray-500">Total Expenses</Text>
         </View>
       </View>
+
       <View className="flex-row items-center mt-4">
-        {members?.map((member, index) => (
+        {members.slice(0, 4)?.map((member, index) => (
           <View
             key={index}
             className="bg-gray-100 rounded-full border-2 border-white"
@@ -45,7 +58,7 @@ export function ExpenseGroupCard({
             }}
           >
             <Image
-              className="size-12"
+              className="size-10"
               borderRadius={100}
               source={{
                 uri: member,
@@ -54,6 +67,16 @@ export function ExpenseGroupCard({
           </View>
         ))}
       </View>
+      <Button
+        text="View details"
+        className="py-3 self-end"
+        onPress={() =>
+          router.navigate({
+            pathname: "/group/[groupId]",
+            params: { groupId: id },
+          })
+        }
+      />
     </View>
   );
 }

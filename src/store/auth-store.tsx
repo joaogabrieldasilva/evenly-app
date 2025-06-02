@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, combine, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthUser } from "../models/User";
 
 const initialState = {
   name: null as string | null,

@@ -4,24 +4,20 @@ import { useAuth, useAuthActions } from "@/src/store/auth-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { router, useRootNavigationState } from "expo-router";
 import { useEffect } from "react";
 
 let isRefreshing = false;
 
-export default function Index() {
-  const { userId } = useAuth();
+export function useRefreshToken() {
   const { signOut } = useAuthActions();
-  const rootNavigationState = useRootNavigationState();
-  const isRouterReady = !!rootNavigationState?.key;
 
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    api.interceptors.response.use(
+    const responseInterceptor = api.interceptors.response.use(
       async (response) => response,
       async (error: AxiosError) => {
-        console.log(error.status);
+        console.error(error.status);
         if (error.status === 401) {
           const refreshAuthToken = await AsyncStorage.getItem(
             "@evenly/refreshToken"
@@ -77,13 +73,11 @@ export default function Index() {
         }
       }
     );
-  }, []);
 
-  useEffect(() => {
-    if (isRouterReady) {
-      router.replace(userId ? "/(private)/(tabs)" : "/auth/sign-in");
-    }
-  }, [userId, isRouterReady]);
+    return () => {
+      api.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
 
   return null;
 }
