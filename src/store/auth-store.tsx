@@ -6,7 +6,7 @@ import { AuthUser } from "../models/User";
 const initialState = {
   name: null as string | null,
   email: null as string | null,
-  userId: null as string | null,
+  userId: null as number | null,
 };
 
 export const authStore = create(

@@ -1,12 +1,16 @@
 import { UserCard } from "../user-card";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useGroupUsersBalance } from "@/src/queries/groups/use-group-users-balance";
+import { useAuth } from "@/src/store/auth-store";
 
 type GroupMembersProps = {
   groupId: number;
+  groupOwnerId: number;
 };
 
-export function GroupMembers({ groupId }: GroupMembersProps) {
+export function GroupMembers({ groupId, groupOwnerId }: GroupMembersProps) {
+  const { userId } = useAuth();
+  const isOwner = userId === groupOwnerId;
   const { data: membersBalance = [] } = useGroupUsersBalance({ groupId });
 
   return (
@@ -16,7 +20,13 @@ export function GroupMembers({ groupId }: GroupMembersProps) {
       data={membersBalance}
       renderItem={({ item, index }) => (
         <Animated.View entering={FadeInDown.delay(index * 100)}>
-          <UserCard {...item} />
+          <UserCard
+            {...item}
+            showDelete={false && isOwner && item.id !== userId}
+            onDelete={() => {
+              console.log("DELETE", item.name);
+            }}
+          />
         </Animated.View>
       )}
       keyExtractor={(item) => String(item.id)}

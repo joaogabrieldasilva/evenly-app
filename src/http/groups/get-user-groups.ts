@@ -11,7 +11,11 @@ export type ApiUserGroups = {
     name: string;
     description: string;
     totalExpenses: number;
-    members: string[];
+    members: {
+      id: number;
+      name: string;
+      profileImage: string;
+    }[];
   }[];
 };
 

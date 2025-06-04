@@ -5,11 +5,13 @@ import { getGroupMembersCount } from "@/src/http/groups/get-group-members-count"
 
 type Params = {
   groupId: number;
+  disabled?: boolean;
 };
 
-export function useGroupMembersCount({ groupId }: Params) {
+export function useGroupMembersCount({ groupId, disabled }: Params) {
   return useQuery({
     queryKey: groupKeys.membersCount(groupId),
     queryFn: async () => await getGroupMembersCount({ groupId }),
+    enabled: !disabled,
   });
 }

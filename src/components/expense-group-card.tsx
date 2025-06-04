@@ -3,13 +3,18 @@ import { formatCurrency } from "../utils/format-currency";
 import { cn } from "../utils/cn";
 import { Button } from "./ui/button";
 import { router } from "expo-router";
+import { ProfilePicture } from "./ui/profile-picture";
 
 type ExpenseGroup = {
   id: number;
   name: string;
   description: string;
   totalExpenses: number;
-  members: string[];
+  members: {
+    id: number;
+    name: string;
+    profileImage: string;
+  }[];
 };
 
 type ExpenseGroupCardProps = {} & ExpenseGroup & Omit<ViewProps, "id">;
@@ -46,9 +51,11 @@ export function ExpenseGroupCard({
 
       <View className="flex-row items-center mt-4">
         {members.slice(0, 4)?.map((member, index) => (
-          <View
+          <ProfilePicture
+            className="border-2"
+            uri={member.profileImage}
+            userName={member.name}
             key={index}
-            className="bg-gray-100 rounded-full border-2 border-white"
             style={{
               transform: [
                 {
@@ -56,15 +63,7 @@ export function ExpenseGroupCard({
                 },
               ],
             }}
-          >
-            <Image
-              className="size-10"
-              borderRadius={100}
-              source={{
-                uri: member,
-              }}
-            />
-          </View>
+          />
         ))}
       </View>
       <Button

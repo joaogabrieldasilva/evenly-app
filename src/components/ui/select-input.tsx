@@ -1,20 +1,27 @@
 import { useBottomSheetModalRef } from "@/src/hooks/use-bottom-sheet-modal-ref";
 import { cn } from "@/src/utils/cn";
-import { Controller, useController, useFormContext } from "react-hook-form";
+import { CheckIcon } from "lucide-react-native";
+import { ReactElement, useMemo, useState } from "react";
+import { useController, useFormContext } from "react-hook-form";
 import {
+  Dimensions,
   Keyboard,
   Pressable,
   Text,
-  View,
-  ViewProps,
   TextInput,
   TouchableOpacity,
+  View,
+  ViewProps,
 } from "react-native";
-import { BottomSheetModal } from "../bottom-sheet-modal/bottom-sheet-modal";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { ReactElement, useMemo } from "react";
 import { BottomSheetKeyboardAwareScrollView } from "../bottom-sheet-keyboard-aware-scrollview";
-import { CheckIcon } from "lucide-react-native";
+import {
+  BottomSheetModal,
+  BottomSheetModalProps,
+} from "./bottom-sheet-modal/bottom-sheet-modal";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { LegendList } from "@legendapp/list";
+
+const { height } = Dimensions.get("window");
 
 export type SelectInputOption = {
   label: string;
@@ -29,7 +36,9 @@ export type SelectInputProps = {
   placeholder?: string;
   defaultValue?: string;
   inputContainerClassname?: string;
+  required?: boolean;
   options?: SelectInputOption[];
+  bottomSheetProps?: Partial<BottomSheetModalProps>;
 } & ViewProps;
 
 export function SelectInput({
@@ -40,11 +49,23 @@ export function SelectInput({
   defaultValue,
   inputContainerClassname,
   placeholder,
+  required = true,
   options,
+  bottomSheetProps,
   ...props
 }: SelectInputProps) {
   const { control } = useFormContext();
   const { field } = useController({ control, name, defaultValue });
+
+  const [filter, setFilter] = useState("");
+
+  const filteredOptions = useMemo(
+    () =>
+      filter
+        ? options?.filter((option) => option.label.includes(filter))
+        : options,
+    [filter, options]
+  );
 
   const selectedOption = useMemo(
     () => options?.find((item) => item.value === field.value),
@@ -52,22 +73,29 @@ export function SelectInput({
   );
 
   function openModal() {
-    Keyboard.dismiss();
     ref.current?.present();
+    Keyboard.dismiss();
   }
 
   const ref = useBottomSheetModalRef();
 
   return (
     <>
-      <View className={className}>
+      <View className={className} {...props}>
         {label ? (
-          <Text className="text-md font-bold text-gray-700 mb-2">{label}</Text>
+          <View className="flex-row items-center gap-x-1 mb-2">
+            <Text className="text-md font-bold text-gray-700">{label}</Text>
+            {!required ? (
+              <Text className="text-md font-normal text-slate-500">
+                (opcional)
+              </Text>
+            ) : null}
+          </View>
         ) : null}
         <Pressable onPress={openModal}>
           <View
             className={cn(
-              "flex-row p-4 items-center rounded-2xl border border-gray-300 bg-white",
+              "flex-row p-4 py-4 items-center rounded-2xl border border-gray-300 bg-white",
               disabled && "opacity-40",
               inputContainerClassname
             )}
@@ -84,7 +112,7 @@ export function SelectInput({
               {field.value ? (
                 <View className="flex-row items-center gap-x-2">
                   {selectedOption?.icon}
-                  <Text className="text-[#6b7280]">
+                  <Text className="text-[#6b7280] font-semibold">
                     {selectedOption?.label}
                   </Text>
                 </View>
@@ -97,11 +125,25 @@ export function SelectInput({
       </View>
       <BottomSheetModal
         ref={ref}
-        snapPoints={["70%"]}
+        snapPoints={["85%"]}
+        keyboardBehavior="extend"
+        stackBehavior="push"
         enableDynamicSizing={false}
+        {...(bottomSheetProps || {})}
       >
-        <BottomSheetKeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          {options?.map((option) => {
+        <BottomSheetTextInput
+          value={filter}
+          onChangeText={setFilter}
+          placeholder="Search..."
+          className="bg-gray-100 px-4 py-3 rounded-lg mx-4"
+          placeholderTextColor="#6b7280"
+        />
+
+        <LegendList
+          data={filteredOptions || []}
+          keyExtractor={(option) => String(option.value)}
+          recycleItems
+          renderItem={({ item: option }) => {
             const isSelected = option.value === field.value;
 
             return (
@@ -129,8 +171,8 @@ export function SelectInput({
                 </View>
               </TouchableOpacity>
             );
-          })}
-        </BottomSheetKeyboardAwareScrollView>
+          }}
+        />
       </BottomSheetModal>
     </>
   );

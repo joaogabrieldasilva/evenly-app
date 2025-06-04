@@ -1,3 +1,4 @@
+import { AuthUser } from "@/src/models/User";
 import { api, ApiResponse } from "../api";
 import { publicApi } from "../public-api";
 

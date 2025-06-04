@@ -1,10 +1,12 @@
 import { GroupDashboard } from "@/src/components/group-dashboard/group-dashboard";
 import { GroupExpenses } from "@/src/components/group-expenses/group-expenses";
 import { GroupMembers } from "@/src/components/group-members/group-members";
+import { NoContentPanel } from "@/src/components/no-content-panel";
 import { Button } from "@/src/components/ui/button";
 import { SegmentedPicker } from "@/src/components/ui/segmented-picker";
+import { useBottomSheetModalRef } from "@/src/hooks/use-bottom-sheet-modal-ref";
 import { useGroupDetails } from "@/src/queries/groups/use-group-details";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ChartColumn,
   PlusIcon,
@@ -13,7 +15,7 @@ import {
   Users,
 } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
+import { DeviceEventEmitter, Pressable, Text, View } from "react-native";
 
 const tabComponents = {
   dashboard: GroupDashboard,
@@ -36,6 +38,17 @@ export default function TripGroup() {
   }, [selectedTab, groupId]);
 
   useEffect(() => {
+    const subscription = DeviceEventEmitter.addListener(
+      "expense-created",
+      () => {
+        setSelectedTab("expenses");
+      }
+    );
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
     navigation.setOptions({
       title: groupDetails?.name,
     });
@@ -44,16 +57,16 @@ export default function TripGroup() {
   return (
     <View className="flex-1 bg-white">
       <View className="flex-row gap-x-4 m-4">
-        <Button
-          text="Add member"
-          variant="outline"
-          className="px-4 py-3"
-          leftIcon={<UserRoundPlus size={18} />}
-        />
-        <Button
+        {/* <Button
           text="Add Expense"
           className="px-4 py-3"
           leftIcon={<PlusIcon color="white" size={18} />}
+        /> */}
+        <Button
+          text="Invite"
+          variant="outline"
+          className="px-4 py-3 "
+          leftIcon={<UserRoundPlus size={18} />}
         />
       </View>
       <SegmentedPicker
@@ -78,7 +91,24 @@ export default function TripGroup() {
           },
         ]}
       />
-      <TabContentComponent groupId={groupId} />
+      <TabContentComponent
+        groupId={groupId}
+        groupOwnerId={groupDetails?.ownerId!}
+      />
+
+      <Pressable
+        onPress={() => {
+          router.navigate({
+            pathname: "/(private)/create-expense",
+            params: { groupId },
+          });
+        }}
+      >
+        <View className="flex-row px-4 py-4 absolute right-5 bottom-20 bg-sky-500 rounded-full items-center justify-center">
+          <PlusIcon size={20} color="white" />
+          <Text className="text-white font-bold text-lg">Add Expense</Text>
+        </View>
+      </Pressable>
     </View>
   );
 }

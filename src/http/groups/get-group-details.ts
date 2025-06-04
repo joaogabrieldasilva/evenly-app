@@ -9,6 +9,7 @@ type Response = ApiResponse<{
   name: string;
   description: string;
   members: string[];
+  ownerId: number;
   totalExpenses: number;
 }>;
 

@@ -84,7 +84,7 @@ export function CreateGroupBottomSheet({ ref }: CreateGroupBottomSheetProps) {
       <BottomSheetModal
         ref={ref}
         snapPoints={["50%"]}
-        keyboardBlurBehavior="none"
+        keyboardBlurBehavior="restore"
         enableDismissOnClose={!isLoading}
         onChange={(index) => {
           // workaround to avoid keyboard-controller from scrolling
@@ -124,7 +124,7 @@ export function CreateGroupBottomSheet({ ref }: CreateGroupBottomSheetProps) {
               />
 
               <Button
-                text="Criar cartão"
+                text="Criar Grupo"
                 onPress={handleSubmit(onSubmit)}
                 className="mt-10"
                 disabled={isLoading}

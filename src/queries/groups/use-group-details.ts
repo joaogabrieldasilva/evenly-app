@@ -8,7 +8,7 @@ type Params = {
 
 export function useGroupDetails({ groupId }: Params) {
   return useQuery({
-    queryKey: groupKeys.details(groupId),
+    queryKey: groupKeys.group(groupId),
     queryFn: async () => await getGroupDetails({ groupId }),
   });
 }

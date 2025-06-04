@@ -6,18 +6,25 @@ type Params = {
 
 type Response = ApiResponse<
   {
-    author: string;
-    authorProfileImage: string;
+    id: number;
     amount: number;
     description: string;
     category: string;
-    transactionId: number;
-    borrowers: string[];
+    paidBy: {
+      name: string;
+      profilePictureUrl: string;
+    };
+    createdAt: Date;
+    splittedWith: {
+      id: number;
+      name: string;
+      profilePictureUrl: string;
+    }[];
   }[]
 >;
 
 export async function getGroupTransactions({ groupId }: Params) {
-  const response = await api.get<Response>(`/transactions/${groupId}/history`);
+  const response = await api.get<Response>(`/groups/${groupId}/transactions`);
 
   return response.data;
 }

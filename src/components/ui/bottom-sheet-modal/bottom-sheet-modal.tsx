@@ -31,9 +31,6 @@ export function BottomSheetModal({
       ref={ref}
       enableDismissOnClose
       animationConfigs={animationConfigs}
-      // containerComponent={(props) => (
-      //   <FullWindowOverlay>{props.children}</FullWindowOverlay>
-      // )}
       backdropComponent={(props) =>
         Platform.OS === "ios" ? (
           <Pressable

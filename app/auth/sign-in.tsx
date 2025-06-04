@@ -53,7 +53,7 @@ export default function SignIn() {
   };
 
   return (
-    <View className="flex-1 items-center justify-center p-4">
+    <View className="flex-1 justify-center p-4">
       <FormProvider {...form}>
         <View className="gap-y-4">
           <TextInput name="email" placeholder="E-mail" />

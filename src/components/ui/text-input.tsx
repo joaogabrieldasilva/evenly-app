@@ -14,6 +14,7 @@ export type TextInputProps = {
   label?: string;
   disabled?: boolean;
   inputContainerClassname?: string;
+  required?: boolean;
   formatter?: (value: string) => void;
   renderInputComponent?: (
     props: (RNTextInputProps | BottomSheetTextInputProps) & {
@@ -30,6 +31,7 @@ export function TextInput({
   label,
   formatter,
   defaultValue,
+  required = true,
   multiline,
   renderInputComponent = (props) => <RNTextInput {...props} />,
   ...props
@@ -44,11 +46,14 @@ export function TextInput({
       render={({ field: { onChange, ...field }, fieldState: { error } }) => {
         return (
           <View className={className}>
-            {label ? (
-              <Text className="text-md font-bold text-gray-700 mb-2">
-                {label}
-              </Text>
-            ) : null}
+            <View className="flex-row items-center gap-x-1 mb-2">
+              <Text className="text-md font-bold text-gray-700">{label}</Text>
+              {!required ? (
+                <Text className="text-md font-normal text-slate-500">
+                  (opcional)
+                </Text>
+              ) : null}
+            </View>
             <View
               className={cn(
                 "flex-row items-center rounded-2xl border border-gray-300 bg-white",
@@ -63,7 +68,8 @@ export function TextInput({
                   multiline,
                   ...props,
                   defaultValue: defaultValue,
-                  className: "flex-1 p-4 rounded-2xl text-md text-gray-600",
+                  className:
+                    "flex-1 p-4 rounded-2xl text-md text-gray-600 text-[#6b7280]",
                   placeholderTextColor: "#6b7280",
                   onChangeText: (text) => {
                     const formattedText = formatter ? formatter(text) : text;
