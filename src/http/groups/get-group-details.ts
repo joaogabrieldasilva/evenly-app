@@ -10,6 +10,7 @@ type Response = ApiResponse<{
   description: string;
   members: string[];
   ownerId: number;
+  createdAt: Date;
   totalExpenses: number;
 }>;
 

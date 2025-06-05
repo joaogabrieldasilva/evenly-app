@@ -66,6 +66,12 @@ export default function TripGroup() {
           text="Invite"
           variant="outline"
           className="px-4 py-3 "
+          onPress={() =>
+            router.navigate({
+              pathname: "/(private)/group/group-qr-code",
+              params: { groupId },
+            })
+          }
           leftIcon={<UserRoundPlus size={18} />}
         />
       </View>
